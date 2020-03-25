@@ -1,0 +1,145 @@
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Drawing;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows.Forms;
+
+namespace Ejercicio_1
+{
+    public partial class Form1 : Form
+    {
+        Empresa empresa;
+        Departamento departamento;
+        public Form1()
+        {
+            InitializeComponent();
+        }
+
+        private void dataLista_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        {
+
+        }
+
+        private void Form1_Load(object sender, EventArgs e)
+        {
+            /*dataGridView1.Columns.Add("Nombre", "Nombre");
+            dataGridView1.Columns.Add("Numeros", "Numeros");
+            dataGridView1.Columns.Add("Sueldo", "Sueldo");
+
+            dataGridView1.ReadOnly = true;*/
+            //dataGridView1.Rows.Insert(0, unEmpleado.Numero, unEmpleado.Nombre, unEmpleado.Sueldo);
+            dataLista.Columns.Add("Numero", "Numero");
+            dataLista.Columns.Add("Nombre", "Nombre");
+            dataLista.Columns.Add("Jefe", "Jefe");
+            dataLista.ReadOnly = true;
+            TablaEmpleado.Columns.Add("Nombre", "Nombre");
+            TablaEmpleado.Columns.Add("Tiempo Trabajando", "Tiempo Trabajando");
+            TablaEmpleado.Columns.Add("Puesto", "Puesto");
+            TablaEmpleado.ReadOnly = true;
+            //btnInsertar.Enabled = false;
+        }
+
+        private void btnCaptura_Click(object sender, EventArgs e)
+        {
+            
+            empresa = new Empresa();
+            empresa.Rfc = txtRfc.Text;
+            empresa.RazonSocial = txtRazon.Text;
+            empresa.Gerente = txtGerente.Text;
+            btnInsertar.Enabled = true;btnCaptura.Enabled = false;btnEliminar.Enabled = true;
+            foreach (Control t in groupBox1.Controls)
+            {
+                t.Enabled = false;
+            }
+        }
+
+        private void btnInsertar_Click(object sender, EventArgs e)
+        {
+            departamento = new Departamento();
+            departamento.Nombre = txtNombre.Text;
+            departamento.Numero = int.Parse(txtNumero.Text);
+            departamento.Jefe = txtJefe.Text;
+            empresa.Insertar(departamento);
+            mostrarDepa();
+            btnInsertar2.Enabled = true;btnEliminar2.Enabled = true;
+        }
+        void mostrarDepa()
+        {
+            dataLista.Rows.Clear();
+            foreach  (Departamento departamento in empresa)
+            {
+                dataLista.Rows.Add(departamento.Numero, departamento.Nombre, departamento.Jefe);
+            }
+
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            Application.Exit();
+        }
+
+        private void btnEliminar_Click(object sender, EventArgs e)
+        {
+            DataGridViewRow CurrentRow = dataLista.CurrentRow;
+            if(dataLista.Rows.Count ==0)
+            {
+                MessageBox.Show("Ya no hay departamentos");
+                return;
+            }
+            if(CurrentRow == null)
+            {
+                MessageBox.Show("Seleccione el renglon a eliminar");
+                return;
+            }else
+            {
+                empresa.eliminarDepa(CurrentRow.Index);
+                mostrarDepa();
+            }
+        }
+
+        private void btnInsertar2_Click(object sender, EventArgs e)
+        {
+            Empleado unEmpleado = new Empleado();
+            unEmpleado.Nombre = txtNombre1.Text;
+            unEmpleado.Tiempo= txtTiempo.Text;
+            unEmpleado.Puesto =  txtPuesto.Text;
+            departamento.Insertar(unEmpleado);
+            mostrarEmpleado();
+        }
+        void mostrarEmpleado()
+        {
+            TablaEmpleado.Rows.Clear();
+            foreach (Empleado unEmpleado in departamento)
+            {
+                TablaEmpleado.Rows.Add(unEmpleado.Nombre, unEmpleado.Tiempo, unEmpleado.Puesto);
+            }
+
+        }
+
+        private void btnEliminar2_Click(object sender, EventArgs e)
+        {
+            DataGridViewRow CurrentRow = TablaEmpleado.CurrentRow;
+            if (TablaEmpleado.Rows.Count == 0)
+            {
+                MessageBox.Show("Ya no hay departamentos");
+                return;
+            }
+            if (CurrentRow == null)
+            {
+                MessageBox.Show("Seleccione el renglon a eliminar");
+                return;
+            }
+            else
+            {
+                departamento.eliminarEmpleado(CurrentRow.Index);
+                mostrarEmpleado();
+            }
+
+        }
+
+    }
+}
